@@ -30,7 +30,97 @@ STEP-8: Repeat the above steps to generate the entire cipher text.
 
 
 ## PROGRAM
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Function to generate the Vigenère Cipher encryption
+void vigenereEncrypt(char* text, char* key) {
+    int textLength = strlen(text);
+    int keyLength = strlen(key);
+    char encryptedText[textLength + 1]; // For the encrypted text
+
+    for (int i = 0, j = 0; i < textLength; i++) {
+        // Only encrypt alphabetic characters, leave others as is
+        if (isalpha(text[i])) {
+            char currentKeyChar = toupper(key[j % keyLength]); // Get the key character
+            char currentTextChar = toupper(text[i]); // Encrypt upper case letter
+            int keyIndex = currentKeyChar - 'A'; // Calculate the key's index (0-25)
+            int textIndex = currentTextChar - 'A'; // Calculate the text's index (0-25)
+
+            // Vigenère cipher encryption formula
+            encryptedText[i] = (textIndex + keyIndex) % 26 + 'A';
+
+            // Move to the next character of the key
+            j++;
+        } else {
+            encryptedText[i] = text[i]; // Non-alphabet characters remain the same
+        }
+    }
+    encryptedText[textLength] = '\0'; // Null-terminate the encrypted string
+    printf("Encrypted Text: %s\n", encryptedText);
+}
+
+// Function to decrypt the Vigenère Cipher
+void vigenereDecrypt(char* cipherText, char* key) {
+    int textLength = strlen(cipherText);
+    int keyLength = strlen(key);
+    char decryptedText[textLength + 1]; // For the decrypted text
+
+    for (int i = 0, j = 0; i < textLength; i++) {
+        // Only decrypt alphabetic characters, leave others as is
+        if (isalpha(cipherText[i])) {
+            char currentKeyChar = toupper(key[j % keyLength]); // Get the key character
+            char currentCipherChar = toupper(cipherText[i]); // Decrypt upper case letter
+            int keyIndex = currentKeyChar - 'A'; // Calculate the key's index (0-25)
+            int cipherIndex = currentCipherChar - 'A'; // Calculate the cipher text's index (0-25)
+
+            // Vigenère cipher decryption formula
+            decryptedText[i] = (cipherIndex - keyIndex + 26) % 26 + 'A';
+
+            // Move to the next character of the key
+            j++;
+        } else {
+            decryptedText[i] = cipherText[i]; // Non-alphabet characters remain the same
+        }
+    }
+    decryptedText[textLength] = '\0'; // Null-terminate the decrypted string
+    printf("Decrypted Text: %s\n", decryptedText);
+}
+
+int main() {
+    char text[100];
+    char key[100];
+
+    // Input the plaintext and the key
+    printf("Enter the plaintext: ");
+    fgets(text, sizeof(text), stdin);
+    text[strcspn(text, "\n")] = '\0'; // Remove newline character
+
+    printf("Enter the key: ");
+    fgets(key, sizeof(key), stdin);
+    key[strcspn(key, "\n")] = '\0'; // Remove newline character
+
+    // Encrypt the plaintext
+    vigenereEncrypt(text, key);
+
+    // Input the ciphertext to decrypt
+    char cipherText[100];
+    printf("Enter the ciphertext to decrypt: ");
+    fgets(cipherText, sizeof(cipherText), stdin);
+    cipherText[strcspn(cipherText, "\n")] = '\0'; // Remove newline character
+
+    // Decrypt the ciphertext
+    vigenereDecrypt(cipherText, key);
+
+    return 0;
+}
+
 
 ## OUTPUT
 
+![Screenshot 2025-04-21 170239](https://github.com/user-attachments/assets/9795d4f0-93b5-48e8-acb0-843ee034066f)
+
 ## RESULT
+
+ implemented the Vigenere Cipher substitution technique using C program.
